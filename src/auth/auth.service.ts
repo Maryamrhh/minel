@@ -19,12 +19,12 @@ export class AuthService {
     private jwt: JwtService,
   ) {}
   async register(createAuthDto: CreateAuthDto) {
-    const existUser = await this.userRepository.find({
+    const existUser = await this.userRepository.findOne({
       where: {
         phoneNumber: createAuthDto.phoneNumber,
       },
     });
-    if (existUser) {
+    if (existUser) {      
       return 'You have already signed up!';
     }
     const tokenNumber = await Math.floor(

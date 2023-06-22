@@ -53,7 +53,6 @@ export class UsersService {
     }})
     await this.orderRepository.update({userId: user.id}, {orderId: orderId})
     const thisUser = await this.userRepository.findOne({where: {id: user.id}})
-    console.log(thisUser);
     
     const request = await require('request');
     const options = {
@@ -75,26 +74,36 @@ export class UsersService {
       json: true,
     };
     
-    await request(options, function (error, response, body) {
-      const mydatasource = new DataSource( {
+    await request(options, async function (error, response, body) {
+      const myDataSource = await new DataSource({
         type: 'postgres',
         host: 'localhost',
         port: 5432,
-        username: typeOrmConfig['username'],
-        password: typeOrmConfig['password'],
+        username: await typeOrmConfig['username'],
+        password: await typeOrmConfig['password'],
         database: 'mitest',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
       }
-       )
-       
-       const orderRepository = mydatasource.getRepository(Order)
-       console.log(orderRepository);
-       orderRepository.update({userId: user.id}, {paymentLink: body['link'], paymentId: body['id']})
+      ).initialize()
+      const queryRunner = myDataSource.createQueryRunner()
+      await queryRunner.connect()
+      await queryRunner.startTransaction()
+      try {
+        await queryRunner.manager.update(Order,{ userId: user.id }, {paymentLink:body['link'], paymentId: body['id']} )  
+        await queryRunner.manager.update(User,{ id: user.id }, {cart: 0} )  
+        await queryRunner.commitTransaction()
+      } catch (err) {
+        await queryRunner.rollbackTransaction()
+      } finally {
+        await queryRunner.release()
+      }
+
+
       if (error) throw new Error(error);
-      console.log(body);
     });
-    return (await this.orderRepository.findOne({where: {userId: user.id}})).paymentLink
+     
+  return (await this.orderRepository.findOne({where: {userId: user.id}})).paymentLink
 
   }
 
