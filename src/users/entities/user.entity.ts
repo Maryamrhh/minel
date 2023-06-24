@@ -22,7 +22,4 @@ export class User {
 
   @Column({ default: false })
   Active: boolean;
-
-  @Column({nullable: false, default: 0})
-  cart: number;
 }

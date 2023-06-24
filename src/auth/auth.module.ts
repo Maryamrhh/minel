@@ -7,9 +7,10 @@ import { Auth } from './entities/auth.entity';
 import { JwtModule } from '@nestjs/jwt';
 import {JwtStrategy } from './strategy';
 import { Admin } from 'src/admin/entities/admin.entity';
+import { Cart } from 'src/checkout/entities/cart.entity';
 
 @Module({
-  imports: [JwtModule.register({}), TypeOrmModule.forFeature([Auth, User, Admin])],
+  imports: [JwtModule.register({}), TypeOrmModule.forFeature([Auth, User, Admin, Cart])],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
 })

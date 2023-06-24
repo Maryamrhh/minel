@@ -10,10 +10,7 @@ export class Product {
 
   @Column()
   price: number;
-
-  @Column()
-  number: number;
-
+  
   @Column()
   description: string;
 

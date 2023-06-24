@@ -13,26 +13,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { GetUser } from 'src/auth/decorator';
 import { User } from './entities/user.entity';
 import { JwtGaurd } from 'src/auth/guard';
-import { OrderUserDto } from './dto/order-user.dto';
 
 @UseGuards(JwtGaurd)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('Cart')
-  showCart(@GetUser() user: User) {
-    return this.usersService.showCart(user);
-  }
-
   @Get('me')
   getMe(@GetUser() user: User) {
     return this.usersService.getMe(user);
   }
-  @Get('confirmCart')
-  confirmCart(@GetUser() user: User) {
-    return this.usersService.confirmCart(user);
-  }
+
 
   @Patch('profile/edit')
   editProfile(@Body() updateUserDto: UpdateUserDto, @GetUser() user: User) {
@@ -44,8 +35,8 @@ export class UsersController {
     return this.usersService.removeFromCart(id, user);
   }
 
-  @Post('order')
-  order(@Body() orderUserDto: OrderUserDto, @GetUser() user: User) {
-    return this.usersService.order(orderUserDto, user)
+  @Get(':id/:itemNumber')
+  addToCart(@Param('id') id: string,@Param('itemNumber') itemNumber: string,  @GetUser() user: User) {
+    return this.usersService.addToCart(id,+itemNumber, user);
   }
 }

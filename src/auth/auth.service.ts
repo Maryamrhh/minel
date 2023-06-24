@@ -9,12 +9,15 @@ import { User } from 'src/users/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginAuthDto } from './dto/login-auth.dto';
 import * as bcrypt from 'bcrypt';
+import { Cart } from 'src/checkout/entities/cart.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Auth) private authRepository: Repository<Auth>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    @InjectRepository(Cart) private cartRepository: Repository<Cart>,
+
     private readonly config: ConfigService,
     private jwt: JwtService,
   ) {}
@@ -63,6 +66,8 @@ export class AuthService {
         phoneNumber: verifyAuthDto.phoneNumber,
       });
       const user = await this.userRepository.save(newUser);
+      await this.cartRepository.save({ userId: user.id });
+
       return this.signToken(user.id, user.phoneNumber);
     }
     return 'wrong token!';

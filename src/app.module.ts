@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { CategoryModule } from './category/category.module';
-import { OrderModule } from './order/order.module';
+import { CheckoutModule } from './checkout/checkout.module';
 
 @Module({
   imports: [
@@ -18,7 +18,7 @@ import { OrderModule } from './order/order.module';
     AuthModule,
     AdminModule,
     CategoryModule,
-    OrderModule,
+    CheckoutModule,
   ],
   controllers: [],
   providers: [],

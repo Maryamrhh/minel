@@ -9,9 +9,6 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
   @IsNumber()
   price: number;
 
-  @IsNumber()
-  number: number;
-
   @IsString()
   description: string;
 
